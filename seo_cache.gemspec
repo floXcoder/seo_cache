@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rack', '~> 2'
   spec.add_dependency 'railties', '~> 5'
+  spec.add_dependency 'net-http-persistent', '~> 3'
   spec.add_dependency 'activesupport', '~> 5'
   spec.add_dependency 'selenium-webdriver', '~> 3'
   spec.add_dependency 'chromedriver-helper', '~> 2'

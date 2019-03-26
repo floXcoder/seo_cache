@@ -61,6 +61,11 @@ If you use disk caching, add to your Nginx configuration:
 
 ```
 location / {
+    # Ignore url with blacklisted params (e.g. page)
+    if ($arg_page) {
+      break;
+    }
+    
     # cached pages
     set $cache_extension '';
     if ($request_method = GET) {
