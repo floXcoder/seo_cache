@@ -2,6 +2,13 @@
 
 Cache dedicated for SEO with Javascript rendering :fire:
 
+## Purpose
+
+Google credo is: Don't waste my bot time!
+
+So to reduce Googlebot crawling time, let's provide HTML files in a specific cache.
+
+This cache is suitable for static (generated or not) pages but not for connected pages.
 
 ## Installation
 
@@ -19,41 +26,97 @@ Or install it yourself as:
 
     $ gem install seo_cache
 
-Install chrome driver on your device
+Install chromium or chrome driver on your device (the chromedriver will be automatically downloaded).
 
-## How it works
+Declare the middleware. For instance in `config/initializers/seo_cache.rb`:
 
-Specific cache for bots to optimize time to first byte and render Javascript on server side.
+```ruby
+require 'seo_cache'
 
-Options:
+# See options below
 
-Choose a cache mode (`disk` or `memory`):
+Rails.application.config.middleware.use SeoCache::Middleware
+```
+
+## Options
+
+Chrome path (**required**) (`disk` or `memory`):
+
+    SeoCache.chrome_path = Rails.env.development? ? '/usr/bin/chromium-browser' : '/usr/bin/chromium'
+
+Choose a cache mode (`memory` (default) or `disk`):
 
     SeoCache.cache_mode = 'memory'
 
-If cache on disk, specify the cache path (e.g. `Rails.root.join('public', 'seo_cache')`):
+Disk cache path (required if disk cache):
     
-    SeoCache.disk_cache_path = nil
+    SeoCache.disk_cache_path = Rails.root.join('public', 'seo_cache')
+
+Redis URL (required if memory cache):
+    
+    SeoCache.redis_url = "redis://localhost:6379/"
+
+Redis prefix:
+    
+    SeoCache.redis_namespace = '_my_project:seo_cache'
+
+Specific log file (if you want to log missed cache urls):
+    
+    SeoCache.logger_path = Rails.root.join('log', 'seo_cache.log')
+
+Activate missed cache urls:
+    
+    SeoCache.log_missed_cache = true
     
 URLs to blacklist:
 
-    SeoCache.blacklist_urls = []
+    SeoCache.blacklist_params = %w[^/assets/.* ^/admin.*]
+    
+Params to blacklist:
+
+    SeoCache.blacklist_urls = %w[page]
     
 URLs to whitelist:
 
     SeoCache.whitelist_urls = []
     
-Query params un URl to blacklist:
+Parameter to add manually to the URl to force page caching, if you want to cache a specific URL (e.g. `https://<my_website>/?_seo_cache_=true`):
 
-    SeoCache.blacklist_params = []
+    SeoCache.force_cache_url_param = '_seo_cache_'
+    
+URL extension to ignore when caching (already defined):
+
+    SeoCache.extensions_to_ignore = [<your_list>]
+    
+List of bot agents (already defined):
+
+    SeoCache.crawler_user_agents = [<your_list>]
+    
+Parameter added to URL when generating the page, avoid infinite rendering (override only if already used):
+
+    SeoCache.prerender_url_param = '_prerender_'
+
+Be aware, JS will be render twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy). 
 
 ## Automatic caching
 
-To automate cache, create a cron rake task which called:
+To automate caching, create a cron rake task (e.g. in `lib/tasks/populate_seo_cache.rake`):
 
 ```ruby
-SeoCache::PopulateCache.new('https://<your-domain-name>', paths_to_cache).new.perform
+namespace :MyProject do
+
+  desc 'Populate cache for SEO'
+  task populate_seo_cache: :environment do |_task, _args|
+    require 'seo_cache/populate_cache'
+    
+    paths_to_cache = public_paths_like_sitemap
+    
+    SeoCache::PopulateCache.new('https://<your-domain-name>', paths_to_cache).new.perform
+  end
+end
 ```
+
+You can add the `force_cache: true` option to `SeoCache::PopulateCache` for overwrite cache data.
 
 ## Server
 
@@ -88,6 +151,78 @@ location / {
     }
 }
 ```
+
+## Heroku case
+
+If you use Heroku server, you can't store file on dynos. But you have two alternatives :
+
+- Use the memory mode
+
+- Use a second server (a dedicated one) to store HTML files and combine with Nginx.
+
+To intercept the request, use the following middleware in Rails:
+
+In `config/initializers`, create a new file:
+
+```ruby
+require 'bot_detector'
+
+if Rails.env.production?
+  Rails.application.config.middleware.insert_before ActionDispatch::Static, BotDetector
+end
+``` 
+
+Then in `lib` directory, for instance, manage the request:
+
+```ruby
+class BotRedirector
+  CRAWLER_USER_AGENTS = ['googlebot', 'yahoo', 'bingbot', 'baiduspider', 'facebookexternalhit', 'twitterbot', 'rogerbot', 'linkedinbot', 'embedly', 'bufferbot', 'quora link preview', 'showyoubot', 'outbrain', 'pinterest/0.', 'developers.google.com/+/web/snippet', 'www.google.com/webmasters/tools/richsnippets', 'slackbot', 'vkShare', 'W3C_Validator', 'redditbot', 'Applebot', 'WhatsApp', 'flipboard', 'tumblr', 'bitlybot', 'SkypeUriPreview', 'nuzzel', 'Discordbot', 'Google Page Speed', 'Qwantify'].freeze
+
+  IGNORE_URLS = [
+    '/robots.txt'
+  ].freeze
+
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    if env['HTTP_USER_AGENT'].present? && CRAWLER_USER_AGENTS.any? { |crawler_user_agent| env['HTTP_USER_AGENT'].downcase.include?(crawler_user_agent.downcase) }
+      begin
+        request = Rack::Request.new(env)
+
+        return @app.call(env) if IGNORE_URLS.any? { |ignore_url| request.fullpath.downcase =~ /^#{ignore_url.downcase}/ }
+
+        url     = URI.parse(ENV['SEO_SERVER'] + request.fullpath)
+        headers = {
+          'User-Agent'      => env['HTTP_USER_AGENT'],
+          'Accept-Encoding' => 'gzip'
+        }
+        req     = Net::HTTP::Get.new(url.request_uri, headers)
+        # req.basic_auth(ENV['SEO_USER_ID'], ENV['SEO_PASSWD']) # if authentication mechanism
+        http         = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true if url.scheme == 'https'
+        response     = http.request(req)
+        if response['Content-Encoding'] == 'gzip'
+          response.body              = ActiveSupport::Gzip.decompress(response.body)
+          response['Content-Length'] = response.body.length
+          response.delete('Content-Encoding')
+        end
+
+        return [response.code.to_i, { 'Content-Type' => response.header['Content-Type'] }, [response.body]]
+      rescue => error
+        Rails.logger.error("[bot_redirection] #{error.message}")
+
+        @app.call(env)
+      end
+    else
+      @app.call(env)
+    end
+  end
+end
+```
+
+If you use a second server, all links must be relatives in your HTML files, to avoid multi-domains links.
 
 ## Inspiration
 

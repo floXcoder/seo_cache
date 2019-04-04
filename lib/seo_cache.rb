@@ -1,23 +1,27 @@
 # frozen_string_literal: true
 
-require 'net/http'
 require 'active_support'
-require 'selenium/webdriver'
-require 'chromedriver-helper'
-require 'selenium/webdriver/remote/http/persistent'
+require 'net/http'
 require 'redis'
 require 'redis-namespace'
+require 'selenium/webdriver'
+require 'selenium/webdriver/remote/http/persistent'
+require 'webdrivers'
 
+require 'seo_cache/logger'
 require 'seo_cache/version'
 require 'seo_cache/middleware'
 
 module SeoCache
 
+  mattr_accessor :chrome_path
+  self.chrome_path = nil
+
   mattr_accessor :cache_mode # disk or memory
   self.cache_mode = 'memory'
 
   mattr_accessor :disk_cache_path
-  self.disk_cache_path = nil
+  self.disk_cache_path = ''
 
   mattr_accessor :disk_cache_extension
   self.disk_cache_extension = '.html'
@@ -89,6 +93,15 @@ module SeoCache
     'Qwantify'
   ]
 
+  mattr_accessor :logger_path
+  self.logger_path = nil
+
+  mattr_accessor :logger_level
+  self.logger_level = :INFO
+
+  mattr_accessor :logger
+  # self.logger = SeoCache::Logger.new(SeoCache.logger_path)
+
   def self.memory_cache?
     SeoCache.cache_mode == 'memory'
   end
@@ -97,11 +110,17 @@ module SeoCache
     SeoCache.cache_mode == 'disk'
   end
 
+  def self.logger
+    @logger ||= SeoCache::Logger.new(SeoCache.logger_path)
+  end
+
   def self.log(message)
-    Rails.logger.info { "[seo_cache] #{message}" }
+    SeoCache.logger.info(message)
+    # Rails.logger.info { "[seo_cache] #{message}" }
   end
 
   def self.log_error(message)
-    Rails.logger.error { "[seo_cache] #{message}" }
+    SeoCache.logger.error(message)
+    # Rails.logger.error { "[seo_cache] #{message}" }
   end
 end

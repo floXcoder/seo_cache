@@ -1,3 +1,10 @@
+## 0.3.0
+
+- Add more examples in README
+- Switch chromedriver to webdrivers
+- Add tests
+- Set correct URL for Github
+
 ## 0.2.0
 
 - Improve README

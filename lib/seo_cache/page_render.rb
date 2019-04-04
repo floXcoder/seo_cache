@@ -33,6 +33,8 @@ module SeoCache
     def init_driver
       # Selenium::WebDriver.logger.level = :info
 
+      Selenium::WebDriver::Chrome.path = SeoCache.chrome_path if SeoCache.chrome_path
+
       client          = ::Selenium::WebDriver::Remote::Http::Persistent.new
       browser_options = ::Selenium::WebDriver::Chrome::Options.new
       browser_options.args << '--headless'

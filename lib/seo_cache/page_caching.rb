@@ -35,7 +35,7 @@ module SeoCache
 
     def cache_exists?(path)
       if SeoCache.memory_cache? && @redis
-        @redis.exists?(cache_path(path))
+        @redis.exists(cache_path(path))
       else
         File.exist?(cache_path(path))
       end
