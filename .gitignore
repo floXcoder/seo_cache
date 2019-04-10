@@ -7,6 +7,7 @@
 /doc/
 /pkg/
 /spec/reports/
+/spec/data/
 /tmp/
 .ruby-version
 .ruby-gemset

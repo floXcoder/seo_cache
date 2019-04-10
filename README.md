@@ -42,61 +42,91 @@ Rails.application.config.middleware.use SeoCache::Middleware
 
 Chrome path (**required**) (`disk` or `memory`):
 
-    SeoCache.chrome_path = Rails.env.development? ? '/usr/bin/chromium-browser' : '/usr/bin/chromium'
+```ruby
+SeoCache.chrome_path = Rails.env.development? ? '/usr/bin/chromium-browser' : '/usr/bin/chromium'
+```
 
 Choose a cache mode (`memory` (default) or `disk`):
 
-    SeoCache.cache_mode = 'memory'
+```ruby
+SeoCache.cache_mode = 'memory'
+```
 
-Disk cache path (required if disk cache):
+Cache path (**required**):
     
-    SeoCache.disk_cache_path = Rails.root.join('public', 'seo_cache')
+```ruby
+SeoCache.cache_path = Rails.root.join('public', 'seo_cache')
+```
 
-Redis URL (required if memory cache):
-    
-    SeoCache.redis_url = "redis://localhost:6379/"
+Redis URL (**required** if memory cache):
+
+```ruby
+SeoCache.redis_url = "redis://localhost:6379/"
+```
 
 Redis prefix:
-    
-    SeoCache.redis_namespace = '_my_project:seo_cache'
+
+```ruby
+SeoCache.redis_namespace = '_my_project:seo_cache'
+```
 
 Specific log file (if you want to log missed cache urls):
     
-    SeoCache.logger_path = Rails.root.join('log', 'seo_cache.log')
+```ruby
+SeoCache.logger_path = Rails.root.join('log', 'seo_cache.log')
+```
 
 Activate missed cache urls:
     
-    SeoCache.log_missed_cache = true
-    
+```ruby
+SeoCache.log_missed_cache = true
+```
+ 
 URLs to blacklist:
 
-    SeoCache.blacklist_params = %w[^/assets/.* ^/admin.*]
-    
+```ruby
+SeoCache.blacklist_params = %w[^/assets/.* ^/admin.*]
+```
+
 Params to blacklist:
 
-    SeoCache.blacklist_urls = %w[page]
-    
+```ruby
+SeoCache.blacklist_urls = %w[page]
+```
+
 URLs to whitelist:
 
-    SeoCache.whitelist_urls = []
-    
+```ruby
+SeoCache.whitelist_urls = []
+```
+
 Parameter to add manually to the URl to force page caching, if you want to cache a specific URL (e.g. `https://<my_website>/?_seo_cache_=true`):
 
-    SeoCache.force_cache_url_param = '_seo_cache_'
-    
+```ruby
+SeoCache.force_cache_url_param = '_seo_cache_'
+```
+
 URL extension to ignore when caching (already defined):
 
-    SeoCache.extensions_to_ignore = [<your_list>]
-    
+```ruby
+SeoCache.extensions_to_ignore = [<your_list>]
+```
+
 List of bot agents (already defined):
 
-    SeoCache.crawler_user_agents = [<your_list>]
+```ruby
+SeoCache.crawler_user_agents = [<your_list>]
+```
     
 Parameter added to URL when generating the page, avoid infinite rendering (override only if already used):
 
-    SeoCache.prerender_url_param = '_prerender_'
+```ruby
+SeoCache.prerender_url_param = '_prerender_'
+```
 
-Be aware, JS will be render twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy). 
+Be aware, JS will be render twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy).
+
+Disk cache is recommended by default. Nginx will directly fetch file on disk. The TTFB (time to first byte) will be under 200ms :). You can use memory cache if you have lot of RAM.
 
 ## Automatic caching
 
@@ -122,7 +152,7 @@ You can add the `force_cache: true` option to `SeoCache::PopulateCache` for over
 
 If you use disk caching, add to your Nginx configuration:
 
-```
+```nginx
 location / {
     # Ignore url with blacklisted params (e.g. page)
     if ($arg_page) {

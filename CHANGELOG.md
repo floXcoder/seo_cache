@@ -1,3 +1,9 @@
+## 0.4.0
+
+- Complete README
+- Add new tests to cover disk and memory
+- Remove "disk_" prefix from disk_cache_path and disk_cache_extension
+
 ## 0.3.0
 
 - Add more examples in README

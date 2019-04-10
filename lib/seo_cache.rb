@@ -20,11 +20,11 @@ module SeoCache
   mattr_accessor :cache_mode # disk or memory
   self.cache_mode = 'memory'
 
-  mattr_accessor :disk_cache_path
-  self.disk_cache_path = ''
+  mattr_accessor :cache_path
+  self.cache_path = ''
 
-  mattr_accessor :disk_cache_extension
-  self.disk_cache_extension = '.html'
+  mattr_accessor :cache_extension
+  self.cache_extension = '.html'
 
   mattr_accessor :redis_url
   self.redis_url = 'redis://localhost:6379/'

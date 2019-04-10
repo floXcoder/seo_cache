@@ -44,18 +44,18 @@ module SeoCache
     private
 
     def cache_directory
-      SeoCache.disk_cache_path
+      SeoCache.cache_path
     end
 
     def default_extension
-      SeoCache.disk_cache_extension
+      SeoCache.cache_extension
     end
 
     def cache_file(path, extension)
       name = if path.empty? || path =~ %r{\A/+\z}
                '/index'
              else
-               URI.parser.unescape(path.chomp('/'))
+               URI::Parser.new.unescape(path.chomp('/'))
              end
 
       if File.extname(name).empty?
