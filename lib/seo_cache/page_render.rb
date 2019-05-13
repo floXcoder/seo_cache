@@ -33,6 +33,8 @@ module SeoCache
     def init_driver
       # Selenium::WebDriver.logger.level = :info
 
+      Webdrivers.cache_time = 86_400
+
       Selenium::WebDriver::Chrome.path = SeoCache.chrome_path if SeoCache.chrome_path
 
       client          = ::Selenium::WebDriver::Remote::Http::Persistent.new

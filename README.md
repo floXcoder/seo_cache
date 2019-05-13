@@ -128,6 +128,18 @@ Be aware, JS will be render twice: once by server rendering and once by client. 
 
 Disk cache is recommended by default. Nginx will directly fetch file on disk. The TTFB (time to first byte) will be under 200ms :). You can use memory cache if you have lot of RAM.
 
+## Consult cache pages
+
+Too see in browser the cache page, open a browser and set the user agent to:
+
+`Googlebot (Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html))`
+
+For instance, with Chrome or Chromium, you can change the user agent in "Network conditions" panel.
+
+To (re)cache a page, add this parameter to the url (the browser must use the Googlebot user agent):
+
+`/?_seo_cache_=true`
+
 ## Automatic caching
 
 To automate caching, create a cron rake task (e.g. in `lib/tasks/populate_seo_cache.rake`):
@@ -156,6 +168,9 @@ If you use disk caching, add to your Nginx configuration:
 location / {
     # Ignore url with blacklisted params (e.g. page)
     if ($arg_page) {
+      break;
+    }
+    if ($arg__seo_cache_) {
       break;
     }
     

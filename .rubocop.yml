@@ -26,10 +26,10 @@ Layout/ExtraSpacing:
   Enabled: false
   AllowForAlignment: true
 
-Layout/FirstParameterIndentation:
+Layout/IndentFirstHashElement:
   Enabled: false
 
-Layout/IndentHash:
+Layout/IndentFirstArgument:
   Enabled: false
 
 Layout/LeadingCommentSpace:

@@ -1,3 +1,8 @@
+## 0.5.0
+
+- Add more information in README
+- Update gems and define cache time for browser driver
+
 ## 0.4.0
 
 - Complete README

@@ -83,6 +83,8 @@ module SeoCache
       end
       return false if blacklisted_url
 
+      SeoCache.log('force cache : ' + request.path) if Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param) && SeoCache.log_missed_cache
+
       return is_requesting_prerendered_page
     end
 
