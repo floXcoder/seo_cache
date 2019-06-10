@@ -1,3 +1,7 @@
+## 0.7.0
+
+- Add whitelist hosts domain option (authorize only these domains)
+
 ## 0.6.0
 
 - Update gems (webdrivers and selenium-webdriver)

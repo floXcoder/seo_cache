@@ -49,17 +49,17 @@ module SeoCache
         @logger.level = severity
       else
         case severity.to_s.downcase
-        when 'debug'.freeze
+        when 'debug'
           @logger.level = DEBUG
-        when 'info'.freeze
+        when 'info'
           @logger.level = INFO
-        when 'warn'.freeze
+        when 'warn'
           @logger.level = WARN
-        when 'error'.freeze
+        when 'error'
           @logger.level = ERROR
-        when 'fatal'.freeze
+        when 'fatal'
           @logger.level = FATAL
-        when 'unknown'.freeze
+        when 'unknown'
           @logger.level = UNKNOWN
         else
           raise ArgumentError, "invalid log level: #{severity}"

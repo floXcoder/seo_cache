@@ -56,15 +56,11 @@ module SeoCache
       # If it is the generated page...don't prerender
       return false if query_params.has_key?(SeoCache.prerender_url_param)
 
+      # if it is a bot and host doesn't contain these domains...don't prerender
+      return false if SeoCache.whitelist_hosts.present? && SeoCache.whitelist_hosts.any? { |host| !request.host.include?(host) }
+
+      # if it is a bot and urls contain these params...don't prerender
       return false if SeoCache.blacklist_params.present? && SeoCache.blacklist_params.any? { |param| query_params.has_key?(param) }
-
-      is_requesting_prerendered_page = true if Rack::Utils.parse_query(request.query_string).has_key?('_escaped_fragment_') || Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param)
-
-      # if it is a bot...show prerendered page
-      is_requesting_prerendered_page = true if @crawler_user_agents.any? { |crawler_user_agent| user_agent.downcase.include?(crawler_user_agent.downcase) }
-
-      # if it is BufferBot...show prerendered page
-      is_requesting_prerendered_page = true if buffer_agent
 
       # if it is a bot and is requesting a resource...don't prerender
       return false if @extensions_to_ignore.any? { |extension| request.fullpath.include? extension }
@@ -82,6 +78,14 @@ module SeoCache
         blacklisted_url || blacklisted_referer
       end
       return false if blacklisted_url
+
+      is_requesting_prerendered_page = true if Rack::Utils.parse_query(request.query_string).has_key?('_escaped_fragment_') || Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param)
+
+      # if it is a bot...show prerendered page
+      is_requesting_prerendered_page = true if @crawler_user_agents.any? { |crawler_user_agent| user_agent.downcase.include?(crawler_user_agent.downcase) }
+
+      # if it is BufferBot...show prerendered page
+      is_requesting_prerendered_page = true if buffer_agent
 
       SeoCache.log('force cache : ' + request.path) if Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param) && SeoCache.log_missed_cache
 

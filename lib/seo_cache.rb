@@ -32,6 +32,9 @@ module SeoCache
   mattr_accessor :redis_namespace
   self.redis_namespace = '_seo_cache:'
 
+  mattr_accessor :whitelist_hosts
+  self.whitelist_hosts = []
+
   mattr_accessor :blacklist_urls
   self.blacklist_urls = []
 

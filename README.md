@@ -82,6 +82,12 @@ Activate missed cache urls:
 SeoCache.log_missed_cache = true
 ```
  
+Domains to whitelist (authorize only domains which contains these hosts):
+
+```ruby
+SeoCache.whitelist_hosts = []
+```
+
 URLs to blacklist:
 
 ```ruby
