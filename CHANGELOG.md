@@ -1,3 +1,7 @@
+## 0.8.0
+
+- Change bundler version
+
 ## 0.7.0
 
 - Add whitelist hosts domain option (authorize only these domains)
