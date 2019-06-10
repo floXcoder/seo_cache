@@ -1,3 +1,7 @@
+## 0.6.0
+
+- Update gems (webdrivers and selenium-webdriver)
+
 ## 0.5.0
 
 - Add more information in README
