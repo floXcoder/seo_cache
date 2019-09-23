@@ -21,12 +21,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '~> 5'
-  spec.add_dependency 'net-http-persistent', '~> 3'
   spec.add_dependency 'rack', '~> 2'
   spec.add_dependency 'railties', '~> 5'
   spec.add_dependency 'redis', '~> 4'
   spec.add_dependency 'redis-namespace', '~> 1'
-  spec.add_dependency 'selenium-webdriver', '3.141.0' # 3.142 is bugged
+  spec.add_dependency 'selenium-webdriver', '~> 3'
   spec.add_dependency 'webdrivers', '~> 4'
 
   spec.add_development_dependency 'bundler', '~> 1'

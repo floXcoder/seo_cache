@@ -74,7 +74,7 @@ module SeoCache
     end
 
     def write_to_disk(content, path, gzip)
-      FileUtils.makedirs(File.dirname(path))
+      FileUtils.makedirs(File.dirname(path)) unless File.directory?(File.dirname(path))
       File.open(path, 'wb+') { |f| f.write(content) }
 
       Zlib::GzipWriter.open(path + '.gz', gzip) { |f| f.write(content) } if gzip

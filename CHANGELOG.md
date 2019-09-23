@@ -1,3 +1,12 @@
+## 0.9.0
+
+- Update gems
+- Don't cache response if status is not 200
+- Add 'seo_mode' variable to env to detect si seo mode is currently active
+- Add status to source code to cache only pages with 200 HTTP status code
+- Check existence of destination directory before creating it
+- Remove persistent connection (already built-in in Selenium) 
+
 ## 0.8.0
 
 - Change bundler version

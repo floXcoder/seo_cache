@@ -6,9 +6,9 @@ require 'seo_cache/page_render'
 module SeoCache
   class Middleware
     def initialize(app, options = {})
-      @options                  = options
-      @extensions_to_ignore     = SeoCache.extensions_to_ignore
-      @crawler_user_agents      = SeoCache.crawler_user_agents
+      @options              = options
+      @extensions_to_ignore = SeoCache.extensions_to_ignore
+      @crawler_user_agents  = SeoCache.crawler_user_agents
 
       @app = app
 
@@ -16,7 +16,7 @@ module SeoCache
     end
 
     def call(env)
-      if should_show_prerendered_page(env)
+      if prerender_page?(env)
         cached_response = before_render(env)
 
         return cached_response.finish if cached_response.present?
@@ -24,40 +24,61 @@ module SeoCache
         SeoCache.log('missed cache : ' + Rack::Request.new(env).path) if SeoCache.log_missed_cache
 
         if SeoCache.prerender_service_url.present?
-          prerendered_response = get_prerendered_page_response(env)
-          if prerendered_response
-            response = build_rack_response_from_prerender(prerendered_response.body)
-            after_render(env, prerendered_response)
+          prerender_response = prerender_service(env)
+          if prerender_response
+            response = build_response_from_prerender(prerender_response.body)
+            after_render(env, prerender_response)
             return response.finish
           end
         else
           Thread.new do
-            prerendered_data = page_render(env)
-            after_render(env, prerendered_data) if prerendered_data
+            prerender_data = page_render(env)
+            # Extract status from render page
+            status = prerender_data.scan(/<!--status:(\d+)-->/).last&.first
+            after_render(env, prerender_data, status || 200)
           end
         end
+      elsif prerender_params?(env)
+        env['seo_mode'] = true
+        # Add status to render page because Selenium doesn't return http headers or status...
+        status, headers, response = @app.call(env)
+        status_code               = "<!--status:#{status}-->"
+        # Cannot add at the top of file, Chrome removes leading comments...
+        body_code = response.body.sub('<head>', "<head>#{status_code}")
+        return [status, headers, [body_code]]
       end
 
-      @app.call(env)
+      return @app.call(env)
     end
 
-    def should_show_prerendered_page(env)
-      user_agent                     = env['HTTP_USER_AGENT']
-      buffer_agent                   = env['HTTP_X_BUFFERBOT']
-      is_requesting_prerendered_page = false
+    def prerender_params?(env)
+      return false if env['REQUEST_METHOD'] != 'GET'
+
+      request      = Rack::Request.new(env)
+      query_params = Rack::Utils.parse_query(request.query_string)
+
+      return false if @extensions_to_ignore.any? { |extension| request.fullpath.include? extension }
+
+      return true if query_params.has_key?(SeoCache.prerender_url_param) || query_params.has_key?(SeoCache.force_cache_url_param)
+    end
+
+    def prerender_page?(env)
+      user_agent                   = env['HTTP_USER_AGENT']
+      buffer_agent                 = env['HTTP_X_BUFFERBOT']
+      is_requesting_prerender_page = false
 
       return false unless user_agent
 
       return false if env['REQUEST_METHOD'] != 'GET'
 
-      request = Rack::Request.new(env)
+      request      = Rack::Request.new(env)
       query_params = Rack::Utils.parse_query(request.query_string)
 
       # If it is the generated page...don't prerender
       return false if query_params.has_key?(SeoCache.prerender_url_param)
 
       # if it is a bot and host doesn't contain these domains...don't prerender
-      return false if SeoCache.whitelist_hosts.present? && SeoCache.whitelist_hosts.any? { |host| !request.host.include?(host) }
+      return false if SeoCache.whitelist_hosts.present? && SeoCache.whitelist_hosts.none? { |host| request.host.include?(host) }
 
       # if it is a bot and urls contain these params...don't prerender
       return false if SeoCache.blacklist_params.present? && SeoCache.blacklist_params.any? { |param| query_params.has_key?(param) }
@@ -79,20 +100,20 @@ module SeoCache
       end
       return false if blacklisted_url
 
-      is_requesting_prerendered_page = true if Rack::Utils.parse_query(request.query_string).has_key?('_escaped_fragment_') || Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param)
+      is_requesting_prerender_page = true if Rack::Utils.parse_query(request.query_string).has_key?('_escaped_fragment_') || Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param)
 
       # if it is a bot...show prerendered page
-      is_requesting_prerendered_page = true if @crawler_user_agents.any? { |crawler_user_agent| user_agent.downcase.include?(crawler_user_agent.downcase) }
+      is_requesting_prerender_page = true if @crawler_user_agents.any? { |crawler_user_agent| user_agent.downcase.include?(crawler_user_agent.downcase) }
 
       # if it is BufferBot...show prerendered page
-      is_requesting_prerendered_page = true if buffer_agent
+      is_requesting_prerender_page = true if buffer_agent
 
       SeoCache.log('force cache : ' + request.path) if Rack::Utils.parse_query(request.query_string).has_key?(SeoCache.force_cache_url_param) && SeoCache.log_missed_cache
 
-      return is_requesting_prerendered_page
+      return is_requesting_prerender_page
     end
 
-    def get_prerendered_page_response(env)
+    def prerender_service(env)
       url          = URI.parse(build_api_url(env))
       headers      = {
         'User-Agent'      => env['HTTP_USER_AGENT'],
@@ -107,7 +128,8 @@ module SeoCache
         response['Content-Length'] = response.body.length
         response.delete('Content-Encoding')
       end
-      response
+
+      return response
     rescue StandardError => error
       SeoCache.log_error(error.message)
     end
@@ -136,8 +158,8 @@ module SeoCache
       "#{prerender_url}#{forward_slash}#{url}"
     end
 
-    def build_rack_response_from_prerender(prerendered_response)
-      response = Rack::Response.new(prerendered_response.body, prerendered_response.code, prerendered_response.header)
+    def build_response_from_prerender(prerender_response)
+      response = Rack::Response.new(prerender_response.body, prerender_response.code, prerender_response.header)
 
       # @options[:build_rack_response_from_prerender]&.call(response, prerendered_response)
 
@@ -152,17 +174,14 @@ module SeoCache
 
       return nil unless cached_render
 
-      if cached_render&.is_a?(String)
+      if cached_render.is_a?(String)
         Rack::Response.new(cached_render, 200, 'Content-Type' => 'text/html; charset=utf-8')
-      elsif cached_render&.is_a?(Rack::Response)
+      elsif cached_render.is_a?(Rack::Response)
         cached_render
       end
     end
 
     def page_render(env)
-      # return nil unless @options[:page_render]
-      # @options[:page_render].call(url)
-
       # Add key parameter to url
       request = Rack::Request.new(env)
       url     = if request.query_string.present? || request.url.end_with?('?')
@@ -172,12 +191,11 @@ module SeoCache
                 end
       url     += "#{SeoCache.prerender_url_param}=true"
 
-      PageRender.new.get(url)
+      return PageRender.new.get(url)
     end
 
-    def after_render(env, response)
-      # return true unless @options[:after_render]
-      # @options[:after_render].call(env, response)
+    def after_render(env, response, status = 200)
+      return unless response && SeoCache.cache_only_status.include?(status.to_i)
 
       @page_caching.cache(response, Rack::Request.new(env).path)
     end

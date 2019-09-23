@@ -112,6 +112,12 @@ Parameter to add manually to the URl to force page caching, if you want to cache
 SeoCache.force_cache_url_param = '_seo_cache_'
 ```
 
+Cache only the pages with these HTTP status code (don't cache by default not found or error pages):
+
+```ruby
+SeoCache.cache_only_status = [<your_list>]
+```
+
 URL extension to ignore when caching (already defined):
 
 ```ruby
@@ -133,6 +139,15 @@ SeoCache.prerender_url_param = '_prerender_'
 Be aware, JS will be render twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy).
 
 Disk cache is recommended by default. Nginx will directly fetch file on disk. The TTFB (time to first byte) will be under 200ms :). You can use memory cache if you have lot of RAM.
+
+## Controllers
+
+You can check if seo mode is active in your controllers, with the following variable:
+
+```ruby
+request.env['seo_mode']
+```
+
 
 ## Consult cache pages
 

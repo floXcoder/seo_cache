@@ -5,7 +5,6 @@ require 'net/http'
 require 'redis'
 require 'redis-namespace'
 require 'selenium/webdriver'
-require 'selenium/webdriver/remote/http/persistent'
 require 'webdrivers'
 
 require 'seo_cache/logger'
@@ -53,14 +52,18 @@ module SeoCache
   mattr_accessor :prerender_service_url
   self.prerender_service_url = nil
 
+  # Selenium doesn't support HTTP header, so URL parameter is mandatory
   mattr_accessor :prerender_url_param
   self.prerender_url_param = '_prerender_'
 
   mattr_accessor :force_cache_url_param
   self.force_cache_url_param = '_seo_cache_'
 
+  mattr_accessor :cache_only_status
+  self.cache_only_status = [200]
+
   mattr_accessor :extensions_to_ignore
-  self.extensions_to_ignore = %w[.js .css .xml .less .png .jpg .jpeg .gif .pdf .doc .txt .ico .rss .zip .mp3 .rar .exe .wmv .doc .avi .ppt .mpg .mpeg .tif .wav .mov .psd .ai .xls .mp4 .m4a .swf .dat .dmg .iso .flv .m4v .torrent]
+  self.extensions_to_ignore = %w[.js .css .xml .less .png .jpg .jpeg .gif .pdf .doc .txt .ico .rss .zip .mp3 .rar .exe .wmv .doc .avi .ppt .mpg .mpeg .tif .wav .mov .psd .ai .xls .mp4 .m4a .swf .dat .dmg .iso .flv .m4v .torrent .woff2 .woff .gz .ttf .svg]
 
   mattr_accessor :crawler_user_agents
   self.crawler_user_agents = [
