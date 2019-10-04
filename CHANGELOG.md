@@ -1,5 +1,9 @@
 ## 0.9.0
 
+- Update Readme for nginx configuration
+
+## 0.9.0
+
 - Update gems
 - Don't cache response if status is not 200
 - Add 'seo_mode' variable to env to detect si seo mode is currently active

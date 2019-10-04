@@ -186,6 +186,33 @@ You can add the `force_cache: true` option to `SeoCache::PopulateCache` for over
 If you use disk caching, add to your Nginx configuration:
 
 ```nginx
+# Before any block:
+map $http_user_agent $limit_bots {
+    default 0;
+    ~*(google|bing|yandex|msnbot) 1;
+}
+
+map $request_method $is_get {
+    default 0;
+    GET 1;
+}
+
+# Before location block:
+set $bot_request '';
+if ($is_get) {
+      set $bot_request 'GET_';
+}
+
+if ($limit_bots) { 
+  set $bot_request "${bot_request}BOT"; 
+}
+
+set $cache_extension '';
+if ($bot_request = GET_BOT) {
+  set $cache_extension '.html';
+}
+
+# Inside location block:
 location / {
     # Ignore url with blacklisted params (e.g. page)
     if ($arg_page) {
@@ -195,28 +222,15 @@ location / {
       break;
     }
     
-    # cached pages
-    set $cache_extension '';
-    if ($request_method = GET) {
-      set $cache_extension '.html';
-    }
-    
-    # Index HTML Files
-    if (-f $document_root/seo_cache/$uri/index$cache_extension) {
-      rewrite (.*) /seo_cache/$1/index.html break;
-    }
-    
-    # Other HTML Files
-    if (-f $document_root/seo_cache/$uri$cache_extension) {
-      rewrite (.*) /seo_cache/$1.html break;
-    }
-    
-    # All
-    if (-f $document_root/seo_cache/$uri) {
-      rewrite (.*) /seo_cache/$1 break;
-    }
+    try_files /seo_cache/$uri/index$cache_extension /seo_cache/$uri$cache_extension /seo_cache/$uri $uri @rubyproxy;
+}
+
+location @rubyproxy {
+    ...
 }
 ```
+
+This configuration allow you to use SEO cache only for bots (you can add other bots) and GET requests. For users, you don't want to use the cached page (user connection, basket, ...). The performance are less important for users then bots.
 
 ## Heroku case
 
