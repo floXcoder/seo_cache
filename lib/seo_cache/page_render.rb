@@ -30,12 +30,15 @@ module SeoCache
       Selenium::WebDriver::Chrome.path = SeoCache.chrome_path if SeoCache.chrome_path
 
       browser_options = ::Selenium::WebDriver::Chrome::Options.new
+      browser_options.args << 'disable-infobars'
       browser_options.args << '--headless'
-      browser_options.args << '--disable-gpu'
       browser_options.args << '--no-sandbox'
+      browser_options.args << '--disable-dev-shm-usage'
+      browser_options.args << '--disable-gpu'
       browser_options.args << '--disable-web-security'
+      browser_options.args << '--disable-extensions'
       browser_options.args << '--window-size=1920x1080'
-      # browser_options.args << '--remote-debugging-port=3020'
+      browser_options.args << '--remote-debugging-port=3020'
       @driver = ::Selenium::WebDriver.for(:chrome, options: browser_options)
     end
   end

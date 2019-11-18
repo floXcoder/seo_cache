@@ -1,4 +1,8 @@
-## 0.9.0
+## 0.11.0
+
+- Update for Rails 6
+
+## 0.10.0
 
 - Update Readme for nginx configuration
 
