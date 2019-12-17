@@ -181,6 +181,9 @@ end
 
 You can add the `force_cache: true` option to `SeoCache::PopulateCache` for overwrite cache data.
 
+If you want to only execute only through a rake task, you can comment the line which include the middleware. keep all options configured and remove only the middleware. Thus all pages will be cached and SeoCache not called for pages not in cache.
+It's useful if you have a script which generates all website pages (based on sitemap for instance) and you run script every day.
+
 ## Server
 
 If you use disk caching, add to your Nginx configuration:

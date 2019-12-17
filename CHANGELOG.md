@@ -1,3 +1,8 @@
+## 0.12.0
+
+- Force driver to quit after page rendering (except for populate cache, quit only after rendered all pages)
+- Add option to wait for page loading (in case of asynchronous components, like React Router)
+
 ## 0.11.0
 
 - Update for Rails 6

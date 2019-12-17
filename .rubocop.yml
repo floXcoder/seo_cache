@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
 
 Documentation:
   Enabled: false
@@ -10,26 +10,32 @@ LineLength:
 Bundler/OrderedGems:
   Enabled: false
 
-Layout/AlignHash:
-  Enabled: false
-
-Layout/AlignParameters:
-  Enabled: false
-
 Layout/CaseIndentation:
   Enabled: false
 
+Layout/CommentIndentation:
+  Enabled: false
+
 Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 Layout/ExtraSpacing:
   Enabled: false
   AllowForAlignment: true
 
-Layout/IndentFirstHashElement:
+Layout/FirstArgumentIndentation:
   Enabled: false
 
-Layout/IndentFirstArgument:
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+
+Layout/FirstHashElementIndentation:
+  Enabled: false
+
+Layout/HashAlignment:
   Enabled: false
 
 Layout/LeadingCommentSpace:
@@ -45,6 +51,9 @@ Layout/MultilineMethodCallIndentation:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
+  Enabled: false
+
+Layout/ParameterAlignment:
   Enabled: false
 
 Layout/SpaceAroundOperators:
@@ -80,16 +89,50 @@ Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 120
 
+Metrics/ModuleLength:
+  CountComments: false  # count full line comments?
+  Max: 350
+
 Metrics/ParameterLists:
   Max: 7
 
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
+Rails/DynamicFindBy:
+  Enabled: false
+
+Rails/FindBy:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/HelperInstanceVariable:
+  Enabled: false
+
 Rails/OutputSafety:
   Enabled: false
 
+Rails/UnknownEnv:
+  Enabled: false
+
+Rails/Validation:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 10
+
 Style/AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/ColonMethodCall:

@@ -6,14 +6,16 @@ module SeoCache
       init_driver
     end
 
-    def get(url)
+    def get(url, quit_after_render = true)
       @driver.get(url)
+
+      sleep SeoCache.wait_time_for_page_loading if SeoCache.wait_time_for_page_loading
 
       return @driver.page_source
     rescue StandardError => error
       SeoCache.log_error(error.message)
-    # ensure
-    #   @driver&.quit
+    ensure
+      @driver&.quit if quit_after_render
     end
 
     def close_connection
@@ -25,7 +27,7 @@ module SeoCache
     def init_driver
       # Selenium::WebDriver.logger.level = :info
 
-      Webdrivers.cache_time = 86_400
+      Webdrivers.cache_time            = 86_400 * 10 # Chromedriver will be cached for 10 days (except if it detects a new version of Chrome)
 
       Selenium::WebDriver::Chrome.path = SeoCache.chrome_path if SeoCache.chrome_path
 

@@ -34,7 +34,7 @@ module SeoCache
           Thread.new do
             prerender_data = page_render(env)
             # Extract status from render page
-            status = prerender_data.scan(/<!--status:(\d+)-->/).last&.first
+            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first
             after_render(env, prerender_data, status || 200)
           end
         end

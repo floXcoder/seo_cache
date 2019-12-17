@@ -5,7 +5,7 @@ require 'net/http'
 require 'redis'
 require 'redis-namespace'
 require 'selenium/webdriver'
-require 'webdrivers'
+require 'webdrivers/chromedriver'
 
 require 'seo_cache/logger'
 require 'seo_cache/version'
@@ -58,6 +58,10 @@ module SeoCache
 
   mattr_accessor :force_cache_url_param
   self.force_cache_url_param = '_seo_cache_'
+
+  # Time to wait to wait before page rendering (for asynchronous called), in seconds
+  mattr_accessor :wait_time_for_page_loading
+  self.wait_time_for_page_loading = nil
 
   mattr_accessor :cache_only_status
   self.cache_only_status = [200]
