@@ -70,6 +70,12 @@ Redis prefix:
 SeoCache.redis_namespace = '_my_project:seo_cache'
 ```
 
+Waiting time before the page is fully loaded (optional in sec, useful for async elements):
+    
+```ruby
+SeoCache.wait_time_for_page_loading = 3
+```
+
 Specific log file (if you want to log missed cache urls):
     
 ```ruby

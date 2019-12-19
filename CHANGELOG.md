@@ -1,3 +1,8 @@
+## 0.13.0
+
+- Correct option for populate cache
+- Add new option in Readme
+
 ## 0.12.0
 
 - Force driver to quit after page rendering (except for populate cache, quit only after rendered all pages)

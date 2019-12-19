@@ -18,7 +18,7 @@ module SeoCache
       @paths.each do |path|
         next if @page_caching.cache_exists?(path) && !@force_cache
 
-        page_source = @page_render.get(@host + path, true)
+        page_source = @page_render.get(@host + path, false)
         @page_caching.cache(page_source, path)
       end
 
