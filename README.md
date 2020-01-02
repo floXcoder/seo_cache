@@ -142,7 +142,13 @@ Parameter added to URL when generating the page, avoid infinite rendering (overr
 SeoCache.prerender_url_param = '_prerender_'
 ```
 
-Be aware, JS will be render twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy).
+If you encounter the following error `DevToolsActivePort file doesn't exist`, you can add the following option:
+
+```ruby
+SeoCache.chrome_debugging_port = '9222'
+```
+
+Be aware, JS will be rendered twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy).
 
 Disk cache is recommended by default. Nginx will directly fetch file on disk. The TTFB (time to first byte) will be under 200ms :). You can use memory cache if you have lot of RAM.
 

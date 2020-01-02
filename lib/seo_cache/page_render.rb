@@ -44,7 +44,7 @@ module SeoCache
       browser_options.args << '--disable-notifications'
       browser_options.args << '--disable-sync'
       browser_options.args << '--window-size=1920x1080'
-      #browser_options.args << '--remote-debugging-port=9222'
+      browser_options.args << "--remote-debugging-port=#{SeoCache.chrome_debugging_port}" if SeoCache.chrome_debugging_port
       @driver = ::Selenium::WebDriver.for(:chrome, options: browser_options)
     end
   end

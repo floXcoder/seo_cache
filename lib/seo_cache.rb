@@ -66,6 +66,10 @@ module SeoCache
   mattr_accessor :cache_only_status
   self.cache_only_status = [200]
 
+  # Default port used by Chrome: 9222
+  mattr_accessor :chrome_debugging_port
+  self.chrome_debugging_port = false
+
   mattr_accessor :extensions_to_ignore
   self.extensions_to_ignore = %w[.js .css .xml .less .png .jpg .jpeg .gif .pdf .doc .txt .ico .rss .zip .mp3 .rar .exe .wmv .doc .avi .ppt .mpg .mpeg .tif .wav .mov .psd .ai .xls .mp4 .m4a .swf .dat .dmg .iso .flv .m4v .torrent .woff2 .woff .gz .ttf .svg]
 

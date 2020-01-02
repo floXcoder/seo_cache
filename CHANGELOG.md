@@ -1,3 +1,7 @@
+## 0.15.0
+
+- Add global option for Chrome debugging port problem
+
 ## 0.14.0
 
 - Change options from Chrome
