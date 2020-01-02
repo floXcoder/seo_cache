@@ -1,3 +1,8 @@
+## 0.14.0
+
+- Change options from Chrome
+- Correct bug when rendering a 404 page
+
 ## 0.13.0
 
 - Correct option for populate cache

@@ -35,12 +35,16 @@ module SeoCache
       browser_options.args << 'disable-infobars'
       browser_options.args << '--headless'
       browser_options.args << '--no-sandbox'
+      browser_options.args << '--incognito'
       browser_options.args << '--disable-dev-shm-usage'
       browser_options.args << '--disable-gpu'
       browser_options.args << '--disable-web-security'
       browser_options.args << '--disable-extensions'
+      browser_options.args << '--disable-logging'
+      browser_options.args << '--disable-notifications'
+      browser_options.args << '--disable-sync'
       browser_options.args << '--window-size=1920x1080'
-      browser_options.args << '--remote-debugging-port=3020'
+      #browser_options.args << '--remote-debugging-port=9222'
       @driver = ::Selenium::WebDriver.for(:chrome, options: browser_options)
     end
   end

@@ -33,8 +33,8 @@ module SeoCache
         else
           Thread.new do
             prerender_data = page_render(env)
-            # Extract status from render page
-            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first
+            # Extract status from render page (return 500 if status cannot be found, some problems happen somewhere)
+            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first || 500
             after_render(env, prerender_data, status || 200)
           end
         end
@@ -44,8 +44,12 @@ module SeoCache
         status, headers, response = @app.call(env)
         status_code               = "<!--status:#{status}-->"
         # Cannot add at the top of file, Chrome removes leading comments...
-        body_code = response.body.sub('<head>', "<head>#{status_code}")
-        return [status, headers, [body_code]]
+        begin
+          body_code = response.body.sub('<head>', "<head>#{status_code}")
+          return [status, headers, [body_code]]
+        rescue
+          return [status, headers, [nil]]
+        end
       end
 
       return @app.call(env)
