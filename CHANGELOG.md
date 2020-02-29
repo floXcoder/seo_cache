@@ -1,3 +1,7 @@
+## 0.16.0
+
+- Add prerender params when populating cache
+
 ## 0.15.0
 
 - Add global option for Chrome debugging port problem
