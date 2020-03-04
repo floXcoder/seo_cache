@@ -1,19 +1,26 @@
+# Documentation
+# https://github.com/bbatsov/rubocop/blob/master/config/default.yml
+# http://rubocop.readthedocs.io/en/latest
+
 AllCops:
   TargetRubyVersion: 2.6
 
-Documentation:
-  Enabled: false
-
-LineLength:
-  Enabled: false
-
 Bundler/OrderedGems:
+  Enabled: false
+
+Layout/HashAlignment:
+  Enabled: false
+
+Layout/ParameterAlignment:
   Enabled: false
 
 Layout/CaseIndentation:
   Enabled: false
 
 Layout/CommentIndentation:
+  Enabled: false
+
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
 Layout/EmptyLinesAroundClassBody:
@@ -35,9 +42,6 @@ Layout/FirstArrayElementIndentation:
 Layout/FirstHashElementIndentation:
   Enabled: false
 
-Layout/HashAlignment:
-  Enabled: false
-
 Layout/LeadingCommentSpace:
   Enabled: false
 
@@ -51,9 +55,6 @@ Layout/MultilineMethodCallIndentation:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
-  Enabled: false
-
-Layout/ParameterAlignment:
   Enabled: false
 
 Layout/SpaceAroundOperators:
@@ -89,47 +90,16 @@ Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 120
 
-Metrics/ModuleLength:
-  CountComments: false  # count full line comments?
-  Max: 350
-
-Metrics/ParameterLists:
-  Max: 7
-
 Metrics/PerceivedComplexity:
   Enabled: false
 
 Naming/RescuedExceptionsVariableName:
   Enabled: false
 
-Rails/DynamicFindBy:
-  Enabled: false
-
-Rails/FindBy:
-  Enabled: false
-
-Rails/HasAndBelongsToMany:
-  Enabled: false
-
-Rails/HelperInstanceVariable:
-  Enabled: false
-
-Rails/OutputSafety:
-  Enabled: false
-
-Rails/UnknownEnv:
-  Enabled: false
-
-Rails/Validation:
-  Enabled: false
-
-RSpec/ExampleLength:
-  Max: 20
-
-RSpec/MultipleExpectations:
-  Max: 10
-
 Style/AsciiComments:
+  Enabled: false
+
+Style/BlockDelimiters:
   Enabled: false
 
 Style/ClassAndModuleChildren:
@@ -141,7 +111,10 @@ Style/ColonMethodCall:
 Style/CommandLiteral:
   Enabled: false
 
-Style/FrozenStringLiteralComment:
+Style/DoubleNegation:
+  Enabled: false
+
+Style/GlobalVars:
   Enabled: false
 
 Style/Lambda:

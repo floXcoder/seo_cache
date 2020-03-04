@@ -1,5 +1,9 @@
 ## 0.16.0
 
+- Correct bug when populating cache
+
+## 0.16.0
+
 - Add prerender params when populating cache
 
 ## 0.15.0
