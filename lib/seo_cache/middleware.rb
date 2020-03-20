@@ -188,7 +188,7 @@ module SeoCache
     def page_render(env)
       # Add key parameter to url
       request = Rack::Request.new(env)
-      url     = if request.query_string.present? || request.url.end_with?('?')
+      url     = if request.query_string.present? || request.url.include?('?')
                   request.url + '&'
                 else
                   request.url + '?'

@@ -1,4 +1,8 @@
-## 0.16.0
+## 0.18.0
+
+- Correct use of prerender param in URL
+
+## 0.17.0
 
 - Correct bug when populating cache
 

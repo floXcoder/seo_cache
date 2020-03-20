@@ -19,7 +19,7 @@ module SeoCache
         next if @page_caching.cache_exists?(path) && !@force_cache
 
         url = @host + path
-        url += if path.end_with?('?')
+        url += if path.include?('?')
                  '&'
                else
                  '?'
