@@ -1,3 +1,7 @@
+## 0.19.0
+
+- Add option to cache page if user connected
+
 ## 0.18.0
 
 - Correct use of prerender param in URL

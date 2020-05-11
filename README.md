@@ -112,6 +112,12 @@ URLs to whitelist:
 SeoCache.whitelist_urls = []
 ```
 
+Cache page even if user is connected (be careful when caching sensitive data):
+
+```ruby
+SeoCache.cache_with_user_connected = true
+```
+
 Parameter to add manually to the URl to force page caching, if you want to cache a specific URL (e.g. `https://<my_website>/?_seo_cache_=true`):
 
 ```ruby
@@ -236,6 +242,9 @@ location / {
     if ($arg__seo_cache_) {
       break;
     }
+
+    # Local rewrite to remove trailing slash
+    rewrite ^/(.*)/$ /$1 last;
     
     try_files /seo_cache/$uri/index$cache_extension /seo_cache/$uri$cache_extension /seo_cache/$uri $uri @rubyproxy;
 }

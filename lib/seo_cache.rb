@@ -43,6 +43,9 @@ module SeoCache
   mattr_accessor :blacklist_params
   self.blacklist_params = []
 
+  mattr_accessor :cache_with_user_connected
+  self.cache_with_user_connected = false
+
   mattr_accessor :log_missed_cache
   self.log_missed_cache = false
 

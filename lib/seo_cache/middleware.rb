@@ -78,6 +78,9 @@ module SeoCache
       request      = Rack::Request.new(env)
       query_params = Rack::Utils.parse_query(request.query_string)
 
+      # Check if user connected
+      return false if !SeoCache.cache_with_user_connected && (env['warden'].respond_to?(:user) && env['warden'].user.present?)
+
       # If it is the generated page...don't prerender
       return false if query_params.has_key?(SeoCache.prerender_url_param)
 

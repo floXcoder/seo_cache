@@ -6,9 +6,9 @@ require 'seo_cache/page_render'
 module SeoCache
   class PopulateCache
     def initialize(host, paths, options = {})
-      @host = host
-      @paths = paths
-      @page_render = PageRender.new
+      @host         = host
+      @paths        = paths
+      @page_render  = PageRender.new
       @page_caching = PageCaching.new
 
       @force_cache = options.fetch(:force_cache, false)
@@ -30,6 +30,7 @@ module SeoCache
         @page_caching.cache(page_source, path)
       end
 
+    ensure
       @page_render.close_connection
     end
   end
