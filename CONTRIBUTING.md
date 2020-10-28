@@ -1,41 +1,38 @@
-# Contributing
+## How to contribute to Ruby on Rails
 
-First, thanks for wanting to contribute. You’re awesome! :heart:
+#### **Did you find a bug?**
 
-## Help
+* **Do not open up a GitHub issue if the bug is a security vulnerability**, and instead to contact us by email contact@ginkonote.com.
 
-We’re not able to provide support through GitHub Issues. If you’re looking for help with your code, try posting on [Stack Overflow](https://stackoverflow.com/).
+* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/floXcoder/seo_cache/issues).
 
-All features should be documented. If you don’t see a feature in the docs, assume it doesn’t exist.
+* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/floXcoder/seo_cache/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **scenario** demonstrating the expected behavior that is not occurring.
 
-## Bugs
+* If possible, use the relevant bug report templates to create the issue:
+  * [**Bug** issues](https://github.com/floXcoder/seo_cache/blob/develop/.github/ISSUE_TEMPLATE/bug_report.md)*
+  
+#### **Did you have an idea to improve the project?**
 
-Think you’ve discovered a bug?
+* Open a new GitHub issue request with your idea.
 
-1. Search existing issues to see if it’s been reported.
-2. Try the `master` branch to make sure it hasn’t been fixed.
+* If possible, use the relevant feature report templates to create the issue:
+  * [**Feature** issues](https://github.com/floXcoder/seo_cache/blob/develop/.github/ISSUE_TEMPLATE/feature_request.md)
 
-```rb
-gem "seo_cache", github: "floXcode/seo_cache"
-```
+#### **Did you write a patch that fixes a bug or do you intend to add a new feature or change an existing one?**
 
-If the above steps don’t help, create an issue. Include:
+* Fork the project, write your code and open a new GitHub pull request with the patch.
 
-- Detailed steps to reproduce
-- Complete backtraces for exceptions
+* Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
 
-## New Features
+* If possible, use the relevant pull request report templates to create the issue:
+  * [**Pull Request**](https://github.com/floXcoder/seo_cache/blob/develop/.github/pull_request_template.md)
+  
+#### **Do you have questions about the source code?**
 
-If you’d like to discuss a new feature, create an issue and start the title with `[Idea]`.
+* You can contact me by email: flo@l-x.fr. I will try to answer as much I can and if available.
 
-## Pull Requests
 
-Fork the project and create a pull request. A few tips:
-
-- Keep changes to a minimum. If you have multiple features or fixes, submit multiple pull requests.
-- Follow the existing style. The code should read like it’s written by a single person.
-
-Feel free to open an issue to get feedback on your idea before spending too much time on it.
+Thanks!
 
 ---
 
