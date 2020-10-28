@@ -2,6 +2,11 @@
 
 Cache dedicated for SEO with Javascript rendering :fire:
 
+You can find in this article, a more detail explanation of the purpose and usage of this gem:
+
+- In english: https://www.ginkonote.com/users/flo/articles/seo-generate-and-cache-your-pages@seo
+- In french: https://www.ginkonote.com/fr/utilisateurs/flo/articles/seo-generation-et-mise-en-cache-des-pages@seo
+
 ## Purpose
 
 Google credo is: Don't waste my bot time!
@@ -97,13 +102,13 @@ SeoCache.whitelist_hosts = []
 URLs to blacklist:
 
 ```ruby
-SeoCache.blacklist_params = %w[^/assets/.* ^/admin.*]
+SeoCache.blacklist_urls = %w[^/assets/.* ^/admin.*]
 ```
 
 Params to blacklist:
 
 ```ruby
-SeoCache.blacklist_urls = %w[page]
+SeoCache.blacklist_params = %w[page]
 ```
 
 URLs to whitelist:
@@ -167,7 +172,7 @@ request.env['seo_mode']
 ```
 
 
-## Consult cache pages
+## Check cached pages
 
 Too see in browser the cache page, open a browser and set the user agent to:
 
