@@ -9,10 +9,11 @@ describe SeoCache::PopulateCache do
 
   context 'Memory caching' do
     before(:all) do
-      SeoCache.cache_mode      = 'memory'
-      SeoCache.cache_path      = ''
-      SeoCache.redis_namespace = 'seo_cache_test'
-      SeoCache.chrome_path     = '/usr/bin/chromium-browser'
+      SeoCache.cache_mode            = 'memory'
+      SeoCache.cache_path            = ''
+      SeoCache.redis_namespace       = 'seo_cache_test'
+      SeoCache.chrome_path           = '/usr/bin/chromium-browser'
+      SeoCache.chrome_debugging_port = 9222
     end
 
     let(:redis) {
@@ -31,7 +32,7 @@ describe SeoCache::PopulateCache do
     it 'reuses the populated cache with the given paths' do
       previous_content = redis.get('/index.html')
 
-      populate_cache.new('https://example.fr', [cache_path]).perform
+      populate_cache.new('https://google.com', [cache_path]).perform
 
       expect(previous_content).to eq(redis.get('/index.html'))
     end
@@ -39,7 +40,7 @@ describe SeoCache::PopulateCache do
     it 'forces cache to repopulate with the given paths' do
       previous_content = redis.get('/index.html')
 
-      populate_cache.new('https://example.fr', [cache_path], force_cache: true).perform
+      populate_cache.new('https://google.com', [cache_path], force_cache: true).perform
 
       expect(previous_content).not_to eq(redis.get('/index.html'))
     end
@@ -47,9 +48,10 @@ describe SeoCache::PopulateCache do
 
   context 'Disk caching' do
     before(:all) do
-      SeoCache.cache_mode  = 'disk'
-      SeoCache.cache_path  = './spec/data/populate_cache'
-      SeoCache.chrome_path = '/usr/bin/chromium-browser'
+      SeoCache.cache_mode            = 'disk'
+      SeoCache.cache_path            = './spec/data/populate_cache'
+      SeoCache.chrome_path           = '/usr/bin/chromium-browser'
+      SeoCache.chrome_debugging_port = 9222
     end
 
     let(:cache_path) { '/disk_test' }
@@ -70,7 +72,7 @@ describe SeoCache::PopulateCache do
 
       expect(File.readlines(file_path)[1]).to include('Example Domain')
 
-      populate_cache.new('https://example.fr', [cache_path]).perform
+      populate_cache.new('https://google.com', [cache_path]).perform
 
       expect(File.readlines(file_path)[1]).to include('Example Domain')
     end
@@ -81,9 +83,9 @@ describe SeoCache::PopulateCache do
 
       expect(File.readlines(file_path)[1]).to include('Example Domain')
 
-      populate_cache.new('https://example.fr', [cache_path], force_cache: true).perform
+      populate_cache.new('https://google.com', [cache_path], force_cache: true).perform
 
-      expect(File.readlines(file_path)[0]).to include('example.fr')
+      expect(File.readlines(file_path)[4]).to include('www.google.com')
     end
   end
 end

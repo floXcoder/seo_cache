@@ -6,9 +6,10 @@ require 'seo_cache/page_render'
 
 describe SeoCache::PageRender do
   before(:all) do
-    SeoCache.cache_mode      = 'memory'
-    SeoCache.redis_namespace = 'seo_cache_test'
-    SeoCache.chrome_path     = '/usr/bin/chromium-browser'
+    SeoCache.cache_mode            = 'memory'
+    SeoCache.redis_namespace       = 'seo_cache_test'
+    SeoCache.chrome_path           = '/usr/bin/chromium-browser'
+    SeoCache.chrome_debugging_port = 9222
   end
 
   let(:page_render) { described_class }
