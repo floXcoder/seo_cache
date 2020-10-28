@@ -27,7 +27,7 @@ module SeoCache
         url += "#{SeoCache.prerender_url_param}=true"
 
         page_source = @page_render.get(url, false)
-        @page_caching.cache(page_source, path)
+        @page_caching.cache(page_source, path) if page_source
       end
 
     ensure

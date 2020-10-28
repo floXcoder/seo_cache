@@ -14,6 +14,8 @@ module SeoCache
       return @driver.page_source
     rescue StandardError => error
       SeoCache.log_error(error.message)
+
+      return false
     ensure
       @driver&.quit if quit_after_render
     end
