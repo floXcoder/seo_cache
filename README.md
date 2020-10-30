@@ -1,19 +1,30 @@
 # SeoCache
 
-Cache dedicated for SEO with Javascript rendering :fire:
+**SeoCache is a dedicated cache for SEO with JavaScript rendering** :fire:
 
 You can find in this article, a more detail explanation of the purpose and usage of this gem:
 
 - In english: https://www.ginkonote.com/users/flo/articles/seo-generate-and-cache-your-pages@seo
 - In french: https://www.ginkonote.com/fr/utilisateurs/flo/articles/seo-generation-et-mise-en-cache-des-pages@seo
 
+## Table of contents
+- [Purpose](#purpose)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Helpers for controllers](#helpers-for-controllers)
+- [Check cached pages](#check-cached-pages)
+- [Automatic caching](#automatic-caching)
+- [Server configuration](#server-configuration)
+- [Inspiration](#inspiration)
+- [Contributing](#contributing)
+
 ## Purpose
 
 Google credo is: Don't waste my bot time!
 
-So to reduce Googlebot crawling time, let's provide HTML files in a specific cache.
+In order to reduce Googlebot crawling time, let's provide the complete HTML files in a specific cache.
 
-This cache is suitable for static (generated or not) pages but not for connected pages.
+This cache is suitable for static (generated or not) pages but not for user private pages.
 
 ## Installation
 
@@ -43,7 +54,7 @@ require 'seo_cache'
 Rails.application.config.middleware.use SeoCache::Middleware
 ```
 
-## Options
+## Configuration
 
 Chrome path (**required**) (`disk` or `memory`):
 
@@ -159,28 +170,36 @@ If you encounter the following error `DevToolsActivePort file doesn't exist`, yo
 SeoCache.chrome_debugging_port = '9222'
 ```
 
-Be aware, JS will be rendered twice: once by server rendering and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy).
+Be aware, JS will be rendered twice: once by this gem and once by client. For React, this not a problem but with jQuery plugins, it can duplicate elements in the page (you have to check the redundancy).
 
-Disk cache is recommended by default. Nginx will directly fetch file on disk. The TTFB (time to first byte) will be under 200ms :). You can use memory cache if you have lot of RAM.
+Disk cache is recommended by default. Nginx will directly fetch HTML files on disk. The TTFB (time to first byte) will be under 200ms :). You can use memory cache if you have lot of RAM, but if you shut down your server, you will lost all the generated pages! So prefer cache disk storage.
 
-## Controllers
+## Helpers for controllers
 
 You can check if seo mode is active in your controllers, with the following variable:
 
 ```ruby
-request.env['seo_mode']
+def check_seo_mode
+  @seo_mode = (params.key?(SeoCache.prerender_url_param) || params.key?(SeoCache.force_cache_url_param))
+end
+```
+
+And if you want to access to this variable in JS files:
+
+```javascript
+window.seoMode = "{@seo_mode}"
 ```
 
 
 ## Check cached pages
 
-Too see in browser the cache page, open a browser and set the user agent to:
+Too see in browser the cached page, open a browser and set the user agent to:
 
 `Googlebot (Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html))`
 
-For instance, with Chrome or Chromium, you can change the user agent in "Network conditions" panel.
+For instance, with Chrome or Chromium, you can change the user agent in "Network" / "Network conditions" panel.
 
-To (re)cache a page, add this parameter to the url (the browser must use the Googlebot user agent):
+To (re)cache a page, add this parameter to the url (and the browser must use the Googlebot user agent):
 
 `/?_seo_cache_=true`
 
@@ -189,7 +208,7 @@ To (re)cache a page, add this parameter to the url (the browser must use the Goo
 To automate caching, create a cron rake task (e.g. in `lib/tasks/populate_seo_cache.rake`):
 
 ```ruby
-namespace :MyProject do
+namespace :my_project do
 
   desc 'Populate cache for SEO'
   task populate_seo_cache: :environment do |_task, _args|
@@ -202,14 +221,14 @@ namespace :MyProject do
 end
 ```
 
-You can add the `force_cache: true` option to `SeoCache::PopulateCache` for overwrite cache data.
+You can add the `force_cache: true` option to `SeoCache::PopulateCache` for overwrite cached data.
 
-If you want to only execute only through a rake task, you can comment the line which include the middleware. keep all options configured and remove only the middleware. Thus all pages will be cached and SeoCache not called for pages not in cache.
+If you want to execute only through a rake task, you can comment the line which include the middleware. keep all options configured and remove only the middleware. Thus all pages will be cached and SeoCache isn't called for pages not in cache.
 It's useful if you have a script which generates all website pages (based on sitemap for instance) and you run script every day.
 
-## Server
+## Server configuration
 
-If you use disk caching, add to your Nginx configuration:
+If you use disk caching, add this to your Nginx configuration:
 
 ```nginx
 # Before any block:
@@ -255,15 +274,24 @@ location / {
 }
 
 location @rubyproxy {
-    ...
+    proxy_connect_timeout 600;
+    proxy_send_timeout 600;
+    proxy_read_timeout 600;
+    send_timeout 600;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass_header Server;
+    proxy_pass http://0.0.0.0:3020;
 }
 ```
 
-This configuration allow you to use SEO cache only for bots (you can add other bots) and GET requests. For users, you don't want to use the cached page (user connection, basket, ...). The performance are less important for users then bots.
+This configuration allow you to use SEO cache only for bots (you can add other bots at the beginning of the file) and HTML GET requests. For connected users, you don't want to use the cached page (user connection, basket, ...). The performance are less important for users than bots.
 
 ## Heroku case
 
-If you use Heroku server, you can't store file on dynos. But you have two alternatives :
+If you use Heroku server, you can't store files on dynos. But you have two alternatives:
 
 - Use the memory mode
 
