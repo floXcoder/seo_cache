@@ -1,8 +1,8 @@
 ---
 language: ruby
 rvm:
-  - 2.6.3
-  - 2.5.4
+  - 2.7.2
+  - 2.6.6
 gemfile:
   - Gemfile
 
@@ -32,6 +32,4 @@ matrix:
     - rvm: 2.7
       env: RAKE_TASK=spec
     - rvm: 2.6
-      env: RAKE_TASK=spec
-    - rvm: 2.5
       env: RAKE_TASK=spec
