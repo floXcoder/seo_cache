@@ -1,7 +1,37 @@
 ---
-sudo: false
 language: ruby
-cache: bundler
 rvm:
-  - 2.5.1
-before_install: gem install bundler -v 1.16.1
+  - 2.6.3
+  - 2.5.4
+gemfile:
+  - Gemfile
+
+before_install:
+  - gem update --system -N
+  - gem install bundler -N
+
+addons:
+  apt:
+    packages:
+      - chromium-browser
+
+cache:
+  bundler: true
+  directories:
+    - ~/.webdrivers
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+script: bundle exec rake $RAKE_TASK
+
+matrix:
+  include:
+    - rvm: 2.7
+      env: RAKE_TASK=spec
+    - rvm: 2.6
+      env: RAKE_TASK=spec
+    - rvm: 2.5
+      env: RAKE_TASK=spec
