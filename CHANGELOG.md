@@ -1,3 +1,10 @@
+## 1.0.0
+
+- Update Readme (badges, syntax, links, ...)
+- Add Travis CI
+- Update dependencies
+- Do not cache pages in error
+
 ## 0.19.0
 
 - Add option to cache page if user connected
