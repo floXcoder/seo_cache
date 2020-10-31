@@ -1,14 +1,15 @@
 ---
 language: ruby
-rvm:
-  - 2.7.2
-  - 2.6.6
+
 gemfile:
   - Gemfile
 
 before_install:
   - gem update --system -N
   - gem install bundler -N
+
+services:
+  - redis
 
 addons:
   apt:
@@ -30,6 +31,8 @@ script: bundle exec rake $RAKE_TASK
 matrix:
   include:
     - rvm: 2.7
+      gemfile: Gemfile
       env: RAKE_TASK=spec
     - rvm: 2.6
+      gemfile: Gemfile
       env: RAKE_TASK=spec
