@@ -36,3 +36,6 @@ matrix:
     - rvm: 2.6
       gemfile: Gemfile
       env: RAKE_TASK=spec
+    - rvm: 2.5
+      gemfile: Gemfile
+      env: RAKE_TASK=spec
