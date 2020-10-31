@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/seo_cache.svg)](https://badge.fury.io/rb/seo_cache)
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop-hq/rubocop)
-[![Build Status](https://secure.travis-ci.org/teamcapybara/seo_cache.svg)](https://travis-ci.org/floXcoder/seo_cache)
+[![Build Status](https://travis-ci.org/floXcoder/seo_cache.svg)](https://travis-ci.org/floXcoder/seo_cache)
 
 **SeoCache is a dedicated cache for SEO with JavaScript rendering** :fire:
 
