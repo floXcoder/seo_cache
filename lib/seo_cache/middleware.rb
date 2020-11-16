@@ -21,7 +21,10 @@ module SeoCache
 
         return cached_response.finish if cached_response.present?
 
-        SeoCache.log('missed cache : ' + Rack::Request.new(env).path) if SeoCache.log_missed_cache
+        if SeoCache.log_missed_cache
+          env_request =  Rack::Request.new(env)
+          SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
+        end
 
         if SeoCache.prerender_service_url.present?
           prerender_response = prerender_service(env)

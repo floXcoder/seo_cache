@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Add user agent to missed caches
+
 ## 1.0.0
 
 - Update Readme (badges, syntax, links, ...)
