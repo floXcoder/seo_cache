@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Do not log missed cache for ignored statuses
+
 ## 1.0.1
 
 - Add user agent to missed caches

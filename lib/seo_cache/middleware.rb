@@ -22,7 +22,7 @@ module SeoCache
         return cached_response.finish if cached_response.present?
 
         if SeoCache.log_missed_cache
-          env_request =  Rack::Request.new(env)
+          env_request = Rack::Request.new(env)
           SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
         end
 
@@ -36,8 +36,8 @@ module SeoCache
         else
           Thread.new do
             prerender_data = page_render(env)
-            # Extract status from render page (return 500 if status cannot be found, some problems happen somewhere)
-            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first || 500
+            # Extract status from render page or return 404
+            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first || 404
             after_render(env, prerender_data, status || 200)
           end
         end
@@ -206,6 +206,11 @@ module SeoCache
 
     def after_render(env, response, status = 200)
       return unless response && SeoCache.cache_only_status.include?(status.to_i)
+
+      if SeoCache.log_missed_cache
+        env_request = Rack::Request.new(env)
+        SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
+      end
 
       @page_caching.cache(response, Rack::Request.new(env).path)
     end
