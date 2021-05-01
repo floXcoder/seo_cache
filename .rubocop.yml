@@ -1,18 +1,20 @@
 # Documentation
 # https://github.com/bbatsov/rubocop/blob/master/config/default.yml
-# http://rubocop.readthedocs.io/en/latest
+# http://rubocop.readthedocs.io/en/latest
+
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.0
 
 Bundler/OrderedGems:
   Enabled: false
 
-Layout/HashAlignment:
-  Enabled: false
-
-Layout/ParameterAlignment:
-  Enabled: false
+Gemspec/DateAssignment:
+  Enabled: true
 
 Layout/CaseIndentation:
   Enabled: false
@@ -42,7 +44,13 @@ Layout/FirstArrayElementIndentation:
 Layout/FirstHashElementIndentation:
   Enabled: false
 
+Layout/HashAlignment:
+  Enabled: false
+
 Layout/LeadingCommentSpace:
+  Enabled: false
+
+Layout/LineLength:
   Enabled: false
 
 Layout/MultilineBlockLayout:
@@ -57,8 +65,14 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
+Layout/ParameterAlignment:
+  Enabled: false
+
 Layout/SpaceAroundOperators:
   Enabled: false
+
+Layout/SpaceBeforeBrackets:
+  Enabled: true
 
 Layout/SpaceInLambdaLiteral:
   Enabled: false
@@ -66,11 +80,58 @@ Layout/SpaceInLambdaLiteral:
 Layout/TrailingWhitespace:
   Enabled: false
 
+Lint/AmbiguousAssignment:
+  Enabled: true
+
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
+Lint/DeprecatedConstants:
+  Enabled: true
+
+Lint/DuplicateBranch:
+  Enabled: true
+
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: true
+
+Lint/EmptyBlock:
+  Enabled: true
+
+Lint/EmptyClass:
+  Enabled: true
+
+Lint/LambdaWithoutLiteralBlock:
+  Enabled: true
+
+Lint/NoReturnInBeginEndBlocks:
+  Enabled: true
+
+Lint/NumberedParameterAssignment:
+  Enabled: true
+
+Lint/OrAssignmentToConstant:
+  Enabled: true
+
+Lint/RedundantDirGlobSort:
+  Enabled: true
+
+Lint/SymbolConversion:
+  Enabled: true
+
+Lint/ToEnumArguments:
+  Enabled: true
+
+Lint/TripleQuotes:
+  Enabled: true
+
+Lint/UnexpectedBlockArity:
+  Enabled: true
+
+Lint/UnmodifiedReduceAccumulator:
+  Enabled: true
+
 Metrics/AbcSize:
-  # The ABC size is a calculated magnitude, so this number can be a Fixnum or a Float.
   Max: 240
 
 Metrics/BlockLength:
@@ -80,14 +141,14 @@ Metrics/BlockNesting:
   Max: 4
 
 Metrics/ClassLength:
-  CountComments: false  # count full line comments?
+  CountComments: false
   Max: 600
 
 Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/MethodLength:
-  CountComments: false  # count full line comments?
+  CountComments: false
   Max: 120
 
 Metrics/PerceivedComplexity:
@@ -95,6 +156,168 @@ Metrics/PerceivedComplexity:
 
 Naming/RescuedExceptionsVariableName:
   Enabled: false
+
+Performance/AncestorsInclude:
+  Enabled: true
+
+Performance/BigDecimalWithNumericArgument:
+  Enabled: true
+
+Performance/BlockGivenWithExplicitBlock:
+  Enabled: true
+
+Performance/CollectionLiteralInLoop:
+  Enabled: true
+
+Performance/ConstantRegexp:
+  Enabled: true
+
+Performance/MapCompact:
+  Enabled: true
+
+Performance/MethodObjectAsBlock:
+  Enabled: true
+
+Performance/RedundantEqualityComparisonBlock:
+  Enabled: true
+
+Performance/RedundantSortBlock:
+  Enabled: true
+
+Performance/RedundantSplitRegexpArgument:
+  Enabled: true
+
+Performance/RedundantStringChars:
+  Enabled: true
+
+Performance/ReverseFirst:
+  Enabled: true
+
+Performance/SortReverse:
+  Enabled: true
+
+Performance/Squeeze:
+  Enabled: true
+
+Performance/StringInclude:
+  Enabled: true
+
+Performance/Sum:
+  Enabled: true
+
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: true
+
+Rails/AfterCommitOverride:
+  Enabled: true
+
+Rails/AttributeDefaultBlockValue:
+  Enabled: true
+
+Rails/DynamicFindBy:
+  Enabled: false
+
+Rails/FindBy:
+  Enabled: false
+
+Rails/FindById:
+  Enabled: true
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/Inquiry:
+  Enabled: true
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/MailerName:
+  Enabled: true
+
+Rails/MatchRoute:
+  Enabled: true
+
+Rails/NegateInclude:
+  Enabled: true
+
+Rails/Pluck:
+  Enabled: true
+
+Rails/OutputSafety:
+  Enabled: false
+
+Rails/PluckInWhere:
+  Enabled: true
+
+Rails/RenderInline:
+  Enabled: true
+
+Rails/RenderPlainText:
+  Enabled: true
+
+Rails/ShortI18n:
+  Enabled: true
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/SquishedSQLHeredocs:
+  Enabled: true
+
+Rails/UnknownEnv:
+  Enabled: false
+
+Rails/Validation:
+  Enabled: false
+
+Rails/WhereEquals:
+  Enabled: true
+
+Rails/WhereExists:
+  Enabled: true
+
+Rails/WhereNot:
+  Enabled: true
+
+RSpec/BeforeAfterAll:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/Capybara:
+  Enabled: false
+
+RSpec/ImplicitExpect:
+  Enabled: false
+
+RSpec/ImplicitSubject:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 10
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 8
+
+RSpec/NestedGroups:
+  Max: 4
+
+Style/ArgumentsForwarding:
+  Enabled: true
 
 Style/AsciiComments:
   Enabled: false
@@ -105,17 +328,50 @@ Style/BlockDelimiters:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+Style/CollectionCompact:
+  Enabled: true
+
 Style/ColonMethodCall:
   Enabled: false
 
 Style/CommandLiteral:
   Enabled: false
 
+Style/Documentation:
+  Enabled: false
+
+Style/DocumentDynamicEvalDefinition:
+  Enabled: true
+
 Style/DoubleNegation:
   Enabled: false
 
+Style/EndlessMethod:
+  Enabled: true
+
 Style/GlobalVars:
   Enabled: false
+
+Style/HashConversion:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashExcept:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/IfWithBooleanLiteralBranches:
+  Enabled: true
 
 Style/Lambda:
   Enabled: false
@@ -123,12 +379,21 @@ Style/Lambda:
 Style/MultilineIfModifier:
   Enabled: false
 
+Style/NegatedIfElseCondition:
+  Enabled: true
+
+Style/NilLambda:
+  Enabled: true
+
 Style/NumericPredicate:
   Enabled: false
 
 Style/RedundantReturn:
   Enabled: false
   AllowMultipleReturnValues: true
+
+Style/RedundantArgument:
+  Enabled: true
 
 Style/RedundantSelf:
   Enabled: false
@@ -138,6 +403,12 @@ Style/RegexpLiteral:
 
 Style/RescueModifier:
   Enabled: false
+
+Style/StringChars:
+  Enabled: true
+
+Style/SwapValues:
+  Enabled: true
 
 Style/SymbolArray:
   Enabled: false
