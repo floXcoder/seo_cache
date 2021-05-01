@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Ensure page rendered status is present after head element 
+
 ## 1.0.2
 
 - Do not log missed cache for ignored statuses

@@ -37,7 +37,7 @@ module SeoCache
           Thread.new do
             prerender_data = page_render(env)
             # Extract status from render page or return 404
-            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first || 404
+            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first
             after_render(env, prerender_data, status || 200)
           end
         end
@@ -48,7 +48,7 @@ module SeoCache
         status_code               = "<!--status:#{status}-->"
         # Cannot add at the top of file, Chrome removes leading comments...
         begin
-          body_code = response.body.sub('<head>', "<head>#{status_code}")
+          body_code = response.body.sub(/<head( ?)(.*?)>/i, "<head\\1\\2>#{status_code}")
           return [status, headers, [body_code]]
         rescue
           return [status, headers, [nil]]

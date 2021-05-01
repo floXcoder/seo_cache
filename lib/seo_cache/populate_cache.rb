@@ -19,11 +19,7 @@ module SeoCache
         next if @page_caching.cache_exists?(path) && !@force_cache
 
         url = @host + path
-        url += if path.include?('?')
-                 '&'
-               else
-                 '?'
-               end
+        url += path.include?('?') ? '&' : '?'
         url += "#{SeoCache.prerender_url_param}=true"
 
         page_source = @page_render.get(url, false)
