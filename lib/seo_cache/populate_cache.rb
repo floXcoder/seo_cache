@@ -34,7 +34,7 @@ module SeoCache
 
     private
 
-    def generate_cache(path, locale = nil)
+    def generate_cache(path, locale_domain = nil)
       return if @page_caching.cache_exists?(path) && !@force_cache
 
       url = @host + path
@@ -44,8 +44,7 @@ module SeoCache
       page_source = @page_render.get(url, false)
       return unless page_source
 
-      path_cache_key = locale ? "/#{locale}#{path}" : path
-      @page_caching.cache(page_source, path_cache_key)
+      @page_caching.cache(page_source, path, locale_domain)
     end
   end
 end

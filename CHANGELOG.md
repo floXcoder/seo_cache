@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Use correct path for index page with multiple domain names
+
 ## 1.0.4
 
 - Add option to populate seo cache for multi-domains

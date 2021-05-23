@@ -17,12 +17,12 @@ module SeoCache
       @redis.get(cache_path(path, extension)) if SeoCache.memory_cache? && @redis
     end
 
-    def cache(content, path, extension = nil, gzip = Zlib::BEST_COMPRESSION)
+    def cache(content, path, locale_domain = nil, extension = nil, gzip = Zlib::BEST_COMPRESSION)
       instrument :write_page, path do
         if SeoCache.memory_cache? && @redis
-          write_to_memory(content, cache_path(path, extension))
+          write_to_memory(content, cache_path(path, extension, locale_domain))
         else
-          write_to_disk(content, cache_path(path, extension), gzip)
+          write_to_disk(content, cache_path(path, extension, locale_domain), gzip)
         end
       end
     end
@@ -51,22 +51,22 @@ module SeoCache
       SeoCache.cache_extension
     end
 
-    def cache_file(path, extension)
+    def cache_file(path, extension, locale_domain)
       name = if path.empty? || path =~ %r{\A/+\z}
                '/index'
              else
                URI::Parser.new.unescape(path.chomp('/'))
              end
 
-      if File.extname(name).empty?
-        name + (extension || default_extension)
-      else
-        name
-      end
+      name = "#{locale_domain}/#{name}" if locale_domain
+
+      name += extension || default_extension if File.extname(name).empty?
+
+      name
     end
 
-    def cache_path(path, extension = nil)
-      File.join(cache_directory, cache_file(path, extension))
+    def cache_path(path, extension = nil, locale_domain = nil)
+      File.join(cache_directory, cache_file(path, extension, locale_domain))
     end
 
     def write_to_memory(content, path)
