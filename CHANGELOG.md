@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Add option to populate seo cache for multi-domains
+
 ## 1.0.3
 
 - Ensure page rendered status is present after head element 

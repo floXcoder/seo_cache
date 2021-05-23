@@ -227,6 +227,8 @@ end
 
 You can add the `force_cache: true` option to `SeoCache::PopulateCache` for overwrite cached data.
 
+If your website has several domains (.com, .fr, ...), you need to generate your urls for each locale (each key is the locale). And use the `with_locale_keys: true` option.
+
 If you want to execute only through a rake task, you can comment the line which include the middleware. keep all options configured and remove only the middleware. Thus all pages will be cached and SeoCache isn't called for pages not in cache.
 It's useful if you have a script which generates all website pages (based on sitemap for instance) and you run script every day.
 
@@ -275,6 +277,8 @@ location / {
     rewrite ^/(.*)/$ /$1 last;
     
     try_files /seo_cache/$uri/index$cache_extension /seo_cache/$uri$cache_extension /seo_cache/$uri $uri @rubyproxy;
+    # Or for multi-domains:
+    # try_files /seo_cache/fr/$uri/index$cache_extension /seo_cache/fr/$uri$cache_extension /seo_cache/fr/$uri $uri @rubyproxy;
 }
 
 location @rubyproxy {
