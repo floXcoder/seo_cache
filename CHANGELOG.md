@@ -1,3 +1,7 @@
+## 1.0.6
+
+- Logs only missed cache for success response
+
 ## 1.0.5
 
 - Use correct path for index page with multiple domain names

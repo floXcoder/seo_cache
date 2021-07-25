@@ -36,9 +36,15 @@ module SeoCache
         else
           Thread.new do
             prerender_data = page_render(env)
-            # Extract status from render page or return 404
-            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first
-            after_render(env, prerender_data, status || 200)
+            # Extract status from render page or return success (200)
+            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first || 200
+
+            if SeoCache.log_missed_cache && status.to_s.start_with?('2')
+              env_request = Rack::Request.new(env)
+              SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
+            end
+
+            after_render(env, prerender_data, status)
           end
         end
       elsif prerender_params?(env)
@@ -94,7 +100,7 @@ module SeoCache
       return false if SeoCache.blacklist_params.present? && SeoCache.blacklist_params.any? { |param| query_params.has_key?(param) }
 
       # if it is a bot and is requesting a resource...don't prerender
-      return false if @extensions_to_ignore.any? { |extension| request.fullpath.include? extension }
+      return false if @extensions_to_ignore.any? { |extension| request.fullpath.include?(extension) }
 
       # if it is a bot and not requesting a resource and is not whitelisted...don't prerender
       return false if SeoCache.whitelist_urls.present? && SeoCache.whitelist_urls.all? { |whitelisted| !Regexp.new(whitelisted).match(request.fullpath) }
