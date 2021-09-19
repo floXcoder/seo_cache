@@ -1,3 +1,7 @@
+## 1.0.7
+
+- Use new syntax to check if Redis key exists
+
 ## 1.0.6
 
 - Logs only missed cache for success response
