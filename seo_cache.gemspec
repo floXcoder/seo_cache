@@ -25,8 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'railties', '>= 5'
   spec.add_dependency 'redis', '~> 4'
   spec.add_dependency 'redis-namespace', '~> 1'
-  spec.add_dependency 'selenium-webdriver', '~> 3'
-  spec.add_dependency 'webdrivers', '~> 4'
+  spec.add_dependency 'selenium-webdriver', '>= 3'
+  spec.add_dependency 'webdrivers', '>= 3'
 
   spec.add_development_dependency 'bundler', '~> 2'
   spec.add_development_dependency 'rake', '~> 13'

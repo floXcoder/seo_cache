@@ -26,23 +26,23 @@ describe SeoCache::PageCaching do
 
       page_caching.new.cache('<html>Data to cache</html>', cache_path)
 
-      expect(redis.exists(memory_path)).to be true
+      expect(redis.exists?(memory_path)).to be true
       expect(redis.get(memory_path)).to include('Data to cache')
     end
 
     it 'caches new page content' do
       memory_path = SeoCache.cache_path + cache_path + SeoCache.cache_extension
-      expect(redis.exists(memory_path)).to be true
+      expect(redis.exists?(memory_path)).to be true
 
       page_caching.new.cache('<html>Data updated to cache</html>', cache_path)
 
-      expect(redis.exists(memory_path)).to be true
+      expect(redis.exists?(memory_path)).to be true
       expect(redis.get(memory_path)).to include('Data updated to cache')
     end
 
     it 'checks if path is cached' do
       memory_path = SeoCache.cache_path + cache_path + SeoCache.cache_extension
-      expect(redis.exists(memory_path)).to be true
+      expect(redis.exists?(memory_path)).to be true
 
       expect(page_caching.new.cache_exists?(cache_path)).to be true
       expect(page_caching.new.cache_exists?('/unknown_path')).to be false

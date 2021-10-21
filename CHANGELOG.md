@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Update dependencies
+
 ## 1.0.7
 
 - Use new syntax to check if Redis key exists
