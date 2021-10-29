@@ -35,7 +35,7 @@ module SeoCache
     private
 
     def generate_cache(path, locale_domain = nil)
-      return if @page_caching.cache_exists?(path, nil, locale_domain) && !@force_cache
+      return if @page_caching.cache_exists?(path, locale_domain) && !@force_cache
 
       url = @host + path
       url += path.include?('?') ? '&' : '?'

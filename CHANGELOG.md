@@ -1,3 +1,7 @@
+## 1.1.2
+
+- Correct populate seo cache method
+
 ## 1.1.1
 
 - Add new option to use locale as first directory for cache path
