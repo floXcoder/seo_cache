@@ -22,6 +22,12 @@ module SeoCache
   mattr_accessor :cache_path
   self.cache_path = ''
 
+  mattr_accessor :locale_as_first_directory
+  self.locale_as_first_directory = false
+
+  mattr_accessor :locale_method
+  self.locale_method = nil
+
   mattr_accessor :cache_extension
   self.cache_extension = '.html'
 

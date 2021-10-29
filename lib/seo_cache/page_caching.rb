@@ -13,31 +13,31 @@ module SeoCache
       @redis = Redis::Namespace.new(SeoCache.redis_namespace, redis: Redis.new(host: uri.host, port: uri.port, password: uri.password, connect_timeout: 1, timeout: 1), warnings: false)
     end
 
-    def get(path, extension = nil)
-      @redis.get(cache_path(path, extension)) if SeoCache.memory_cache? && @redis
+    def get(path, locale_domain = nil, extension = nil)
+      @redis.get(cache_path(path, locale_domain, extension)) if SeoCache.memory_cache? && @redis
     end
 
     def cache(content, path, locale_domain = nil, extension = nil, gzip = Zlib::BEST_COMPRESSION)
       instrument :write_page, path do
         if SeoCache.memory_cache? && @redis
-          write_to_memory(content, cache_path(path, extension, locale_domain))
+          write_to_memory(content, cache_path(path, locale_domain, extension))
         else
-          write_to_disk(content, cache_path(path, extension, locale_domain), gzip)
+          write_to_disk(content, cache_path(path, locale_domain, extension), gzip)
         end
       end
     end
 
-    def expire(path)
+    def expire(path, locale_domain = nil, extension = nil)
       instrument :expire_page, path do
-        delete(cache_path(path))
+        delete(cache_path(path, locale_domain, extension))
       end
     end
 
-    def cache_exists?(path)
+    def cache_exists?(path, locale_domain = nil, extension = nil)
       if SeoCache.memory_cache? && @redis
-        @redis.exists?(cache_path(path))
+        @redis.exists?(cache_path(path, locale_domain, extension))
       else
-        File.exist?(cache_path(path))
+        File.exist?(cache_path(path, locale_domain, extension))
       end
     end
 
@@ -51,7 +51,7 @@ module SeoCache
       SeoCache.cache_extension
     end
 
-    def cache_file(path, extension, locale_domain)
+    def cache_file(path, locale_domain, extension)
       name = if path.empty? || path =~ %r{\A/+\z}
                '/index'
              else
@@ -65,8 +65,8 @@ module SeoCache
       name
     end
 
-    def cache_path(path, extension = nil, locale_domain = nil)
-      File.join(cache_directory, cache_file(path, extension, locale_domain))
+    def cache_path(path, locale_domain = nil, extension = nil)
+      File.join(cache_directory, cache_file(path, locale_domain, extension))
     end
 
     def write_to_memory(content, path)

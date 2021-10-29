@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Add new option to use locale as first directory for cache path
+
 ## 1.1.0
 
 - Update dependencies

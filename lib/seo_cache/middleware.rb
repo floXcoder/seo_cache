@@ -186,7 +186,9 @@ module SeoCache
       # return nil unless @options[:before_render]
       # cached_render = @options[:before_render].call(env)
 
-      cached_render = @page_caching.get(Rack::Request.new(env).path)
+      env_request = Rack::Request.new(env)
+
+      cached_render = @page_caching.get(env_request.path, get_locale(env_request.params, env_request.host))
 
       return nil unless cached_render
 
@@ -213,12 +215,21 @@ module SeoCache
     def after_render(env, response, status = 200)
       return unless response && SeoCache.cache_only_status.include?(status.to_i)
 
+      env_request = Rack::Request.new(env)
+
       if SeoCache.log_missed_cache
-        env_request = Rack::Request.new(env)
         SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
       end
 
-      @page_caching.cache(response, Rack::Request.new(env).path)
+      @page_caching.cache(response, env_request.path, get_locale(env_request.params, env_request.host))
+    end
+
+    def get_locale(params, host)
+      if SeoCache.locale_as_first_directory
+        SeoCache.locale_method ? SeoCache.locale_method.call(params, host) : I18n.locale
+      else
+        nil
+      end
     end
   end
 end
