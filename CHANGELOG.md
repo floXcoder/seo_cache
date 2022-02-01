@@ -1,5 +1,9 @@
 ## 1.1.2
 
+- Do not try to cache invalid requests
+
+## 1.1.2
+
 - Correct populate seo cache method
 
 ## 1.1.1

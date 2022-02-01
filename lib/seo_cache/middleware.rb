@@ -16,52 +16,39 @@ module SeoCache
     end
 
     def call(env)
-      if prerender_page?(env)
+      @status, @headers, @response = @app.call(env)
+
+      if prerender_page?(env, @status)
         cached_response = before_render(env)
 
         return cached_response.finish if cached_response.present?
-
-        if SeoCache.log_missed_cache
-          env_request = Rack::Request.new(env)
-          SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
-        end
 
         if SeoCache.prerender_service_url.present?
           prerender_response = prerender_service(env)
           if prerender_response
             response = build_response_from_prerender(prerender_response.body)
             after_render(env, prerender_response)
+
             return response.finish
           end
         else
           Thread.new do
             prerender_data = page_render(env)
-            # Extract status from render page or return success (200)
-            status = prerender_data&.scan(/<!--status:(\d+)-->/)&.last&.first || 200
 
-            if SeoCache.log_missed_cache && status.to_s.start_with?('2')
-              env_request = Rack::Request.new(env)
-              SeoCache.log("missed cache : #{env_request.path} (User agent: #{env_request.user_agent})")
-            end
-
-            after_render(env, prerender_data, status)
+            after_render(env, prerender_data, @status)
           end
         end
       elsif prerender_params?(env)
-        env['seo_mode'] = true
-        # Add status to render page because Selenium doesn't return http headers or status...
+        env['seo_mode']           = true
         status, headers, response = @app.call(env)
-        status_code               = "<!--status:#{status}-->"
-        # Cannot add at the top of file, Chrome removes leading comments...
         begin
-          body_code = response.body.sub(/<head( ?)(.*?)>/i, "<head\\1\\2>#{status_code}")
-          return [status, headers, [body_code]]
+          return [status, headers, [response.body]]
         rescue
           return [status, headers, [nil]]
         end
       end
 
-      return @app.call(env)
+      return [@status, @headers, @response]
     end
 
     def prerender_params?(env)
@@ -75,12 +62,14 @@ module SeoCache
       return true if query_params.has_key?(SeoCache.prerender_url_param) || query_params.has_key?(SeoCache.force_cache_url_param)
     end
 
-    def prerender_page?(env)
+    def prerender_page?(env, status)
       user_agent                   = env['HTTP_USER_AGENT']
       buffer_agent                 = env['HTTP_X_BUFFERBOT']
       is_requesting_prerender_page = false
 
       return false unless user_agent
+
+      return false if status.to_i > 299
 
       return false if env['REQUEST_METHOD'] != 'GET'
 
