@@ -1,4 +1,8 @@
-## 1.1.2
+## 1.2.1
+
+- Update deprecated Selenium options
+
+## 1.2.0
 
 - Do not try to cache invalid requests
 
