@@ -30,12 +30,12 @@ script: bundle exec rake $RAKE_TASK
 
 matrix:
   include:
+    - rvm: 3.0
+      gemfile: Gemfile
+      env: RAKE_TASK=spec
     - rvm: 2.7
       gemfile: Gemfile
       env: RAKE_TASK=spec
     - rvm: 2.6
-      gemfile: Gemfile
-      env: RAKE_TASK=spec
-    - rvm: 2.5
       gemfile: Gemfile
       env: RAKE_TASK=spec

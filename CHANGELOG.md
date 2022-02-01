@@ -1,3 +1,7 @@
+## 1.2.2
+
+- Update Ruby version for Travis testing
+
 ## 1.2.1
 
 - Update deprecated Selenium options

@@ -58,6 +58,8 @@ require 'seo_cache'
 Rails.application.config.middleware.use SeoCache::Middleware
 ```
 
+Required at least Ruby 2.6.
+
 ## Configuration
 
 Chrome path (**required**) (`disk` or `memory`):
