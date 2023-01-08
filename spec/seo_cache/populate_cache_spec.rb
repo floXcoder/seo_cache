@@ -18,7 +18,7 @@ describe SeoCache::PopulateCache do
 
     let(:redis) {
       uri = URI.parse(SeoCache.redis_url)
-      Redis::Namespace.new(SeoCache.redis_namespace, redis: Redis.new(host: uri.host, port: uri.port, password: uri.password, connect_timeout: 1, timeout: 1), warnings: false)
+      Redis::Namespace.new(SeoCache.redis_namespace, redis: Redis.new(host: uri.host, port: uri.port, password: uri.password, db: SeoCache.redis_db_index, connect_timeout: 1, timeout: 1), warnings: false)
     }
 
     let(:cache_path) { '/' }

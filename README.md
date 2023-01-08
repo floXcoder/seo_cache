@@ -86,10 +86,16 @@ Redis URL (**required** if memory cache):
 SeoCache.redis_url = "redis://localhost:6379/"
 ```
 
-Redis prefix:
+Redis prefix (if needed):
 
 ```ruby
 SeoCache.redis_namespace = '_my_project:seo_cache'
+```
+
+Redis database index (if needed):
+
+```ruby
+SeoCache.redis_db_index = 1
 ```
 
 Waiting time before the page is fully loaded (optional in sec, useful for async elements):

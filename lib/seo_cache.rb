@@ -34,6 +34,9 @@ module SeoCache
   mattr_accessor :redis_url
   self.redis_url = 'redis://localhost:6379/'
 
+  mattr_accessor :redis_db_index
+  self.redis_db_index = 0
+
   mattr_accessor :redis_namespace
   self.redis_namespace = '_seo_cache:'
 

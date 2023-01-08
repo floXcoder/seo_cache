@@ -1,3 +1,7 @@
+## 1.3.0
+
+- Add new option for Redis: redis_db_index
+
 ## 1.2.2
 
 - Update Ruby version for Travis testing
