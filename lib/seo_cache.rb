@@ -123,7 +123,7 @@ module SeoCache
   self.logger_path = nil
 
   mattr_accessor :logger_level
-  self.logger_level = :INFO
+  self.logger_level = :warn
 
   mattr_accessor :logger
   # self.logger = SeoCache::Logger.new(SeoCache.logger_path)

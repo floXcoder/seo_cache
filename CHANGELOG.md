@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Correct Selenium warnings and add path for logging
+
 ## 1.3.0
 
 - Add new option for Redis: redis_db_index

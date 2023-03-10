@@ -27,7 +27,10 @@ module SeoCache
     private
 
     def init_driver
-      # Selenium::WebDriver.logger.level = :info
+      if SeoCache.logger_path
+        Selenium::WebDriver.logger.output = SeoCache.logger_path
+        Selenium::WebDriver.logger.level  = SeoCache.logger_level
+      end
 
       Webdrivers.cache_time            = 86_400 * 10 # Chromedriver will be cached for 10 days (except if it detects a new version of Chrome)
 
@@ -35,11 +38,12 @@ module SeoCache
 
       browser_options = %w[headless incognito disable-gpu disable-infobars disable-dev-shm-usage disable-gpu disable-web-security disable-extensions no-sandbox disable-logging disable-notifications disable-sync window-size=1920x1080]
       browser_options << "remote-debugging-port=#{SeoCache.chrome_debugging_port}" if SeoCache.chrome_debugging_port
+
       @driver = ::Selenium::WebDriver.for(
         :chrome,
-        capabilities: [Selenium::WebDriver::Chrome::Options.new(
+        options: Selenium::WebDriver::Chrome::Options.new(
           args: browser_options
-        )]
+        )
       )
     end
   end
