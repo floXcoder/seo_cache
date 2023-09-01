@@ -5,7 +5,6 @@ require 'net/http'
 require 'redis'
 require 'redis-namespace'
 require 'selenium/webdriver'
-require 'webdrivers/chromedriver'
 
 require 'seo_cache/logger'
 require 'seo_cache/version'

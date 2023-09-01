@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Remove webdrivers dependency and use only selenium to fetch Chrome driver
+
 ## 1.4.0
 
 - Correct Selenium warnings and add path for logging
